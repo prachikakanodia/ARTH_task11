@@ -1,0 +1,21 @@
+- hosts: all
+  tasks:
+  - name: "Installing HTTPD Webserver"
+    package:
+       name: "httpd"
+       state: present
+
+  - copy:
+       src: "lw.html"
+       dest: "/var/www/html"
+
+  - template:
+       dest: "/etc/httpd/conf.d/lw.conf.j2"
+       src: "lw.conf.j2"
+    notify: web service
+
+  handlers:
+  - name: web service
+    service:
+       name: "httpd"
+       state: restarted
